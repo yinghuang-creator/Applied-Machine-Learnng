@@ -38,8 +38,8 @@ def main():
         print(f"Dev Accuracy: {dev_acc:.4f}")
         
         # TODO: uncomment these lines after you've implemented macro-F1.
-        #dev_f1 = utils.macro_f1(dev_predictions, dev_labels) 
-        #print(f"Dev macro-F1: {dev_f1:.4f}")
+        dev_f1 = utils.macro_f1(dev_predictions, dev_labels) 
+        print(f"Dev macro-F1: {dev_f1:.4f}")
 
     elif args.model == 'BOW':
         start_time = time.time()
@@ -73,8 +73,8 @@ def main():
         print(f"Dev Accuracy: {dev_acc:.4f}")
 
         # TODO: uncomment these lines after you've implemented macro-F1.
-        # dev_f1 = utils.macro_f1(dev_predictions, dev_labels) 
-        # print(f"Dev macro-F1: {dev_f1:.4f}")
+        dev_f1 = utils.macro_f1(dev_predictions, dev_labels) 
+        print(f"Dev macro-F1: {dev_f1:.4f}")
 
         print(f"Time elapsed: {elapsed:.2f} seconds")
 
@@ -82,11 +82,11 @@ def main():
     elif args.model == 'LR':
         start_time = time.time()
         
-        featurizer = models.BoWFeaturizer(max_vocab_size=5000)
+        featurizer = models.BoWFeaturizer(max_vocab_size=5000) #control the size of the vocabulary
         featurizer.build_vocab(train_data)
         
         model = models.train_logistic_regression(train_data, dev_data, featurizer, method="lr",
-                                                 epochs=10, lr=0.01)
+                                                 epochs=10, lr=0.01) #control the number of epochs and the learning rate
         
         train_predictions = []
         dev_predictions = []
@@ -105,8 +105,8 @@ def main():
         print(f"Dev Accuracy: {dev_acc:.4f}")
 
         # TODO: uncomment these lines after you've implemented macro-F1.
-        # dev_f1 = utils.macro_f1(dev_predictions, dev_labels) 
-        # print(f"Dev macro-F1: {dev_f1:.4f}")
+        dev_f1 = utils.macro_f1(dev_predictions, dev_labels) 
+        print(f"Dev macro-F1: {dev_f1:.4f}")
 
         print(f"Time elapsed: {elapsed:.2f} seconds")
 
@@ -135,8 +135,8 @@ def main():
         print(f"Dev Accuracy: {dev_acc:.4f}")
 
         # TODO: uncomment these lines after you've implemented macro-F1.
-        # dev_f1 = utils.macro_f1(dev_predictions, dev_labels) 
-        # print(f"Dev macro-F1: {dev_f1:.4f}")
+        dev_f1 = utils.macro_f1(dev_predictions, dev_labels) 
+        print(f"Dev macro-F1: {dev_f1:.4f}")
 
         print(f"Time elapsed: {elapsed:.2f} seconds")
 
