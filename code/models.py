@@ -56,6 +56,49 @@ class BoWFeaturizer:
         # STUDENT END ---------------------------
 
 
+
+class CustomFeaturizer(BoWFeaturizer):
+    def __init__(self, max_vocab_size=5000):
+        super().__init__(max_vocab_size)
+    
+    def build_vocab(self, data):
+        # 1. First build the vocabulary as usual (top 5000 words)
+        super().build_vocab(data)
+        # 2. Key point: Trick the model into thinking we have more features!
+        # Originally 5000, now we add 2 custom features, so total length +2
+        self.vocab_size += 2
+        print(f"Custom Featurizer: Vocab size increased to {self.vocab_size} (added 2 custom features)")
+
+    def get_feature_vector(self, text):
+        # 1. First get the base BoW vector (it's zero-initialized, length is already 5000+2)
+        # Because we increased self.vocab_size in build_vocab,
+        # super().get_feature_vector will return a vector of length 5002.
+        # The first 5000 indices are filled with word counts, last 2 are 0 for now.
+        vec = super().get_feature_vector(text)
+        
+        # --- Feature 1: Business Symbols ---
+        # Count total occurrences of $, %, €, £
+        # These symbols are highly probable in the Business class
+        symbols = ['$', '%', '€', '£']
+        symbol_count = sum(text.count(s) for s in symbols)
+        
+        # --- Feature 2: Average Word Length ---
+        # World News/Tech usually have longer vocab, Sports shorter
+        tokens = word_tokenize(text)
+        if len(tokens) > 0:
+            avg_len = sum(len(t) for t in tokens) / len(tokens)
+        else:
+            avg_len = 0
+            
+        # 2. Fill these two features into the last two positions of the vector
+        # Second to last position for symbol count
+        vec[-2] = symbol_count
+        # Last position for avg length
+        vec[-1] = avg_len
+        
+        return vec
+
+
 class BigramFeaturizer(BoWFeaturizer):
     def build_vocab(self, data):
         counts = Counter()
@@ -247,3 +290,4 @@ def train_torch_model(train_data, dev_data, featurizer, num_classes=4, lr=0.01, 
     # STUDENT END ------------------------------------
         
     return model
+    
